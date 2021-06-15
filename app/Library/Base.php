@@ -4,7 +4,6 @@ class Base
     public $pdo;
     public $stmt;
     public $error;
-
     public function onInit(){
         $opcion = array(
             PDO::ATTR_PERSISTENT=>true,
@@ -62,28 +61,6 @@ class Base
     public function resultset(){
         $this->Execute();
         return $this->stmt->fetchALL();
-    }
-    //devuelve la cantidad de filas
-    public function RowsCount(){
-        return $this->stmt->rowCount();
-    }
-    public function response($message='',$type = 1){
-        return ['result'=>$type,'message'=>$message];
-    }
-
-    public function toRow($array= null){
-        $r = null;
-        foreach ($array as $row) {
-           $r = $row;break;
-        }
-        return $r;
-    }
-
-    public function isData($result){
-        if($result != null){
-            if(count($result) > 0){return true;}
-            else{return false;}
-        }else{return false;}
     }
     public function model($model){
         require_once DirApp.DirModels.$model.php;

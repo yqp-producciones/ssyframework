@@ -5,7 +5,6 @@
         protected $controller = "IndexController"; //default
         protected $method = "index"; //default
         protected $parameters = []; //default
-
         public function __construct(){
             $url = $this->getUrl();
 
@@ -14,7 +13,6 @@
             if(file_exists(DirApp.DirControllers.ucwords($url[0]).'Controller'.php)){
                 $this->controller = ucwords($url[0]).'Controller';
                 unset($url[0]);
-                
             }
             require_once DirApp.DirControllers.$this->controller.php;
             $this->controller = new $this->controller;
