@@ -7,6 +7,7 @@ class Controller
         return new $model();
     }
     public function view($view, $data=[]){
+        setCurrentData($data);
        // echo DirApp.DirViews.$view.php;
         if(file_exists(DirApp.DirViews.$view.'/'.str_replace('/','.',$view).php)){
             require_once DirApp.DirViews.$view.'/'.str_replace('/','.',$view).php;
@@ -14,13 +15,13 @@ class Controller
         }
         else
         {
-            echo  DirApp.DirViews.$view.'/'.str_replace('/','.',$view);
-            die('no existe vista');
+            echo  DirApp.DirViews.$view.'/'.str_replace('/','.',$view).'<br>';
+           die(' no existe vista ');
         }
         
     }
-    public function response($message='',$type = 1){
-        return json_encode(['result'=>$type,'message'=>$message]);
+    public function response($data=[],$result=true,$state = 1,$message='',$title='Información'){
+        return ['state'=>$state,'result'=>$state,'message'=>$message,'title'=>$title,'data'=>$data];
     }
     public function json($array){
         return json_encode($array);
@@ -35,24 +36,65 @@ class Controller
         }
         return $r;
     }
-    public function redirect($ruta){
+    public function redirectTo($ruta){
         print("<script> document.location.href='".SiteUrl.$ruta."';</script>");
     }
-
+    public function redirect(){
+        $ruta ="";
+        if($this->is_session_company()){
+            $ruta ="company/index";
+        }else if($this->is_session_branch()){
+            $ruta ="branch/index";
+        } else{
+            $ruta ="company/index";
+        }
+        print("<script> document.location.href='".SiteUrl.$ruta."';</script>");
+    }
     /* determina las sessiones de usuario o multiusuario */
-    public function session($param='US'){
-        $param = strtoupper($param);
-        if(isset($_SESSION[$param])){
+    public function is_session(){
+        if(isset($_SESSION[SsName])){
            return true;
         }
         else{ return false;}
     }
-    
-    public function admin(){
-        if(isset($_SESSION['isadmin'])){
+    public function is_session_company(){
+        if(isset($_SESSION[csn])){
            return true;
         }
         else{ return false;}
+    }
+    /* verifica la sesion de la filiar */
+    public function is_session_branch(){
+        if(isset($_SESSION[ssn])){
+           return true;
+        }
+        else{ return false;}
+    }
+    public function go_admin(){
+        $this->redirectTo('admin/index');
+    }
+
+
+    public function go_branch(){
+        $this->redirectTo('branch/index');
+    }
+
+    public function session_admin(){
+        if(isset($_SESSION[SSP])){
+           return true;
+        }
+        else{ return false;}
+    }
+
+    public function session_client(){
+        if(isset($_SESSION[SSC])){
+           return true;
+        }
+        else{ return false;}
+    }
+
+    public function getCurrentMenu($nivel,$menu,$submenu){
+        return ['nivel'=>$nivel,'menu'=>$menu,'submenu'=>$submenu];
     }
 
     public function getAPI($method, $url, $data){
@@ -83,7 +125,7 @@ class Controller
         curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         // EXECUTE:
         $result = curl_exec($curl);
-        if(!$result){return 'error';}
+        if(!$result){die("Connection Failure");}
         curl_close($curl);
         return $result;
     }
@@ -123,6 +165,17 @@ class Controller
                 } else { return false; }
             } else { return false; }
         } else { return false; }
+    }
+
+    /*devuelve el valor de un array por palabra clave */
+    public function getValue($data,$colname,$default){
+        $result = $default;
+            if(isset($data[$colname])){
+                if(strtolower($data[$colname]) != 'null'){
+                    $result =$data[$colname];
+                }
+            }
+        return $result;
     }
 }
 ?>
