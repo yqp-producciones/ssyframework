@@ -1,0 +1,13 @@
+{
+    "name": "yqp-producciones/yqpframework",
+    "description": "Mini Framework PHP",
+    "type": "project",
+    "authors": [
+        {
+            "name": "YQP PRODUCCIONES",
+            "email": "yordicito2014@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
