@@ -1,6 +1,4 @@
 <?php
-//const SiteUrl ="https://knetsistemas.com/";
-//const ApiUrl = "https://clientes.shirlasoft.store/";
 const SiteUrl ="http://localhost/knetsistemas/";
 const ApiUrl = "http://localhost/admin/";
 const SiteName = "Universal";
